@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>孩子的數學自信狀態測驗｜魔數玩中學</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --brand: #1a3a5c;
+    --brand-light: #e8f0f8;
+    --accent: #e85d2e;
+    --accent-light: #fdf0eb;
+    --text-primary: #1a1a1a;
+    --text-secondary: #555;
+    --text-tertiary: #999;
+    --border: #e0ddd6;
+    --surface: #fafaf8;
+    --white: #ffffff;
+    --green: #2e7d4f;
+    --green-bg: #eaf4ee;
+    --amber: #8a5a00;
+    --amber-bg: #fdf3dc;
+    --red: #c0392b;
+    --red-bg: #fdf0ee;
+    --radius: 12px;
+    --radius-sm: 7px;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Noto Sans TC', sans-serif;
+    background: #f5f3ee;
+    color: var(--text-primary);
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  /* ── Hero ── */
+  .hero {
+    background: var(--brand);
+    color: #fff;
+    padding: 56px 24px 48px;
+    text-align: center;
+  }
+  .hero-badge {
+    display: inline-block;
+    background: rgba(255,255,255,.12);
+    border: 1px solid rgba(255,255,255,.2);
+    border-radius: 20px;
+    font-size: 12px;
+    letter-spacing: .08em;
+    padding: 4px 14px;
+    margin-bottom: 20px;
+    color: rgba(255,255,255,.85);
+  }
+  .hero h1 {
+    font-family: 'Noto Serif TC', serif;
+    font-size: clamp(22px, 5vw, 32px);
+    font-weight: 600;
+    line-height: 1.4;
+    margin-bottom: 14px;
+    max-width: 560px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .hero p {
+    font-size: 14px;
+    color: rgba(255,255,255,.7);
+    max-width: 440px;
+    margin: 0 auto 28px;
+    line-height: 1.75;
+  }
+  .hero-meta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    font-size: 12px;
+    color: rgba(255,255,255,.55);
+  }
+  .hero-meta span { display: flex; align-items: center; gap: 5px; }
+  .dot-sep { width: 3px; height: 3px; border-radius: 50%; background: rgba(255,255,255,.3); }
+
+  /* ── Layout ── */
+  .container {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 32px 16px 64px;
+  }
+
+  /* ── Progress ── */
+  .progress-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    padding: 18px 20px;
+    margin-bottom: 24px;
+    position: sticky;
+    top: 12px;
+    z-index: 10;
+  }
+  .progress-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  .progress-label { font-size: 13px; color: var(--text-secondary); }
+  .progress-count { font-size: 13px; font-weight: 500; color: var(--text-primary); }
+  .progress-track {
+    height: 5px;
+    background: #eee;
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width .4s ease, background .4s ease;
+    width: 0%;
+    background: var(--text-tertiary);
+  }
+
+  /* ── Section ── */
+  .section {
+    background: var(--white);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    overflow: hidden;
+    margin-bottom: 14px;
+  }
+  .section-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 18px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+  }
+  .section-dot {
+    width: 9px; height: 9px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .section-title {
+    font-size: 13px;
+    font-weight: 500;
+    flex: 1;
+    color: var(--text-primary);
+  }
+  .section-count {
+    font-size: 11px;
+    color: var(--text-tertiary);
+  }
+  .col-header {
+    display: flex;
+    justify-content: flex-end;
+    padding: 5px 18px 3px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+  }
+  .col-header span {
+    width: 52px;
+    text-align: center;
+    font-size: 11px;
+    color: var(--text-tertiary);
+  }
+  .q-row {
+    display: flex;
+    align-items: stretch;
+    border-bottom: 1px solid var(--border);
+  }
+  .q-row:last-of-type { border-bottom: none; }
+  .q-text {
+    flex: 1;
+    font-size: 13px;
+    padding: 14px 18px;
+    line-height: 1.65;
+    color: var(--text-primary);
+  }
+  .q-sub {
+    font-size: 11px;
+    color: var(--text-tertiary);
+    margin-top: 3px;
+  }
+  .q-options {
+    display: flex;
+    flex-shrink: 0;
+    border-left: 1px solid var(--border);
+  }
+  .q-btn {
+    width: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 4px;
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    transition: background .12s;
+    border-left: 1px solid var(--border);
+    padding: 0;
+  }
+  .q-btn:first-child { border-left: none; }
+  .q-btn:hover { background: var(--surface); }
+  .q-btn .btn-dot {
+    width: 9px; height: 9px;
+    border-radius: 50%;
+    background: #ddd;
+    transition: background .15s, transform .15s;
+  }
+  .q-btn span { font-size: 10px; color: var(--text-tertiary); }
+  .q-btn.selected-yes { background: var(--green-bg); }
+  .q-btn.selected-yes .btn-dot { background: var(--green); transform: scale(1.2); }
+  .q-btn.selected-yes span { color: var(--green); }
+  .q-btn.selected-no { background: var(--red-bg); }
+  .q-btn.selected-no .btn-dot { background: var(--red); transform: scale(1.2); }
+  .q-btn.selected-no span { color: var(--red); }
+
+  /* ── Result ── */
+  .result-wrap { margin-top: 28px; animation: fadeUp .5s ease; }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+
+  .result-summary {
+    background: var(--white);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+  .result-top {
+    padding: 20px 22px;
+    border-left: 4px solid var(--brand);
+  }
+  .result-total {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+  .result-desc {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.75;
+  }
+
+  .dim-section-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin: 24px 0 10px;
+    padding-left: 2px;
+    letter-spacing: .02em;
+  }
+
+  .dim-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  @media (max-width: 480px) { .dim-cards { grid-template-columns: 1fr; } }
+
+  .dim-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .dim-card-head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 14px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+  }
+  .dim-card-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .dim-card-title { font-size: 12px; font-weight: 500; flex: 1; }
+  .dim-card-score { font-size: 11px; color: var(--text-tertiary); }
+  .dim-bar-track { height: 3px; background: #eee; }
+  .dim-bar-fill { height: 100%; transition: width .6s ease; }
+  .dim-card-body { padding: 12px 14px; }
+  .dim-status {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 500;
+    padding: 2px 9px;
+    border-radius: 20px;
+    margin-bottom: 8px;
+  }
+  .dim-desc {
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.65;
+    margin-bottom: 10px;
+  }
+  .action-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .07em;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .action-item {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 6px;
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+  .action-num {
+    width: 17px; height: 17px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  /* ── Footer ── */
+  .footer {
+    margin-top: 40px;
+    text-align: center;
+    padding: 28px 20px;
+    background: var(--white);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+  }
+  .footer-brand {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--brand);
+    margin-bottom: 6px;
+  }
+  .footer-desc {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    line-height: 1.7;
+    margin-bottom: 16px;
+  }
+  .footer-link {
+    display: inline-block;
+    background: var(--brand);
+    color: #fff;
+    font-size: 13px;
+    padding: 9px 22px;
+    border-radius: 999px;
+    text-decoration: none;
+    transition: background .15s;
+  }
+  .footer-link:hover { background: #0e2840; }
+
+  .reset-btn {
+    display: block;
+    margin: 16px auto 0;
+    padding: 9px 22px;
+    font-size: 13px;
+    font-family: 'Noto Sans TC', sans-serif;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: background .15s;
+  }
+  .reset-btn:hover { background: var(--surface); }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-badge">魔數玩中學 · 創辦人的話</div>
+  <h1>孩子還沒說討厭數學，<br>不代表一切都好</h1>
+  <p>這份測驗幫你在問題還小的時候，找出孩子數學信心正在哪個地方悄悄鬆動。</p>
+  <div class="hero-meta">
+    <span>18 道題目</span>
+    <div class="dot-sep"></div>
+    <span>6 個面向</span>
+    <div class="dot-sep"></div>
+    <span>約 3 分鐘</span>
+    <div class="dot-sep"></div>
+    <span>適用小一至小六</span>
+  </div>
+</div>
+
+<div class="container">
+
+  <div class="progress-card">
+    <div class="progress-row">
+      <span class="progress-label" id="prog-text">請開始作答</span>
+      <span class="progress-count" id="prog-count">0 / 18</span>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="prog-fill"></div>
+    </div>
+  </div>
+
+  <div id="quiz"></div>
+  <div id="result-area"></div>
+  <button class="reset-btn" id="reset-btn" style="display:none" onclick="reset()">重新作答</button>
+
+  <div class="footer">
+    <div class="footer-brand">魔數玩中學</div>
+    <div class="footer-desc">
+      用「玩中學」的方式，讓孩子在遊戲中愛上數學與科學。<br>
+      每個孩子都值得一個對的開始。
+    </div>
+    <a class="footer-link" href="https://www.theworldmaths.com" target="_blank">了解更多 →</a>
+  </div>
+
+</div>
+
+<script>
+var sections = [
+  {
+    id: 'understand', title: '理解力', fullTitle: '理解力：能讀懂題目在問什麼',
+    color: '#185FA5', dotColor: '#378ADD',
+    qs: [
+      { text: '做題前會先讀完整個題目，再開始動筆', sub: '而不是看到數字就直接算' },
+      { text: '能用自己的話說出題目在問什麼', sub: '不只是複誦題目文字' },
+      { text: '答錯時，能找出自己哪裡理解錯了', sub: '而不是說「我就是不會」' }
+    ],
+    actions: {
+      low: { status: '需要優先處理', statusColor: '#c0392b', statusBg: '#fdf0ee',
+        desc: '孩子習慣「看到數字就算」，還沒有建立先讀題、再解題的習慣。',
+        steps: ['每次做題前，先問孩子：「這題在問什麼？」讓她說出來再動筆', '練習用手指慢慢指著題目讀，把關鍵詞圈起來', '答錯時，先一起找「哪個字沒讀懂」，不急著重新算'] },
+      mid: { status: '可以再加強', statusColor: '#8a5a00', statusBg: '#fdf3dc',
+        desc: '理解力有一定基礎，但還不穩定，遇到較長的題目容易跳過關鍵資訊。',
+        steps: ['試著讓孩子在題目上畫線，標出「已知」和「要求什麼」', '偶爾問「你怎麼知道要這樣算？」引導她說出思路'] },
+      high: { status: '表現良好', statusColor: '#2e7d4f', statusBg: '#eaf4ee',
+        desc: '孩子能清楚理解題目再作答，這是學好數學最重要的基礎。',
+        steps: ['繼續保持先讀題再動筆的習慣，試著挑戰多步驟題型'] }
+    }
+  },
+  {
+    id: 'thinking', title: '思考意願', fullTitle: '思考意願：願意面對不熟悉的問題',
+    color: '#993C1D', dotColor: '#D85A30',
+    qs: [
+      { text: '遇到沒見過的題型，會嘗試想想看', sub: '而不是直接說不會或跳過' },
+      { text: '卡住了，還是願意再試一次', sub: '不會立刻要求大人給答案' },
+      { text: '做錯了，願意看看為什麼錯', sub: '而不是不想面對' }
+    ],
+    actions: {
+      low: { status: '需要優先處理', statusColor: '#c0392b', statusBg: '#fdf0ee',
+        desc: '孩子把「沒見過」等同於「我不會」，這是放棄思考的早期訊號，比答錯更需要注意。',
+        steps: ['當孩子說「不會」，改問：「你覺得這題跟你做過哪題有點像？」', '降低對答案的要求，改成鼓勵「試著猜猜看」', '刻意稱讚嘗試的過程，而不只是答對才給肯定'] },
+      mid: { status: '可以再加強', statusColor: '#8a5a00', statusBg: '#fdf3dc',
+        desc: '願意嘗試，但遇到挫折容易放棄。需要多一點「卡住了還能怎麼辦」的練習。',
+        steps: ['一起建立「卡住三步驟」：再讀一次題目、畫圖試試、問一個問題', '讓孩子知道卡住是正常的，不是她比別人差'] },
+      high: { status: '表現良好', statusColor: '#2e7d4f', statusBg: '#eaf4ee',
+        desc: '孩子願意面對陌生題型，這種「不怕試」的態度是解決難題的關鍵。',
+        steps: ['給她更多開放式、沒有標準答案的題目，讓這個習慣繼續發展'] }
+    }
+  },
+  {
+    id: 'depth', title: '學習深度', fullTitle: '學習深度：真正懂，還是背起來的',
+    color: '#0F6E56', dotColor: '#1D9E75',
+    qs: [
+      { text: '換個說法或情境，還是會做', sub: '相同概念換不同包裝不會卡住' },
+      { text: '能解釋為什麼這樣算，而不只是說出答案', sub: '' },
+      { text: '遇到需要多步驟的題目，知道從哪裡開始', sub: '不會因為題目長就放棄' }
+    ],
+    actions: {
+      low: { status: '需要優先處理', statusColor: '#c0392b', statusBg: '#fdf0ee',
+        desc: '孩子可能是靠刷題和死背在學習——熟悉的題型答得出來，換個說法就卡住。這是最常被忽略的警訊。',
+        steps: ['減少刷題量，改成每題做完後問「為什麼這樣算？」', '用實物或畫圖驗證答案，讓孩子看見數字背後的意思', '同一個概念，換三種不同說法讓她做，確認是真的懂'] },
+      mid: { status: '可以再加強', statusColor: '#8a5a00', statusBg: '#fdf3dc',
+        desc: '大部分題目能理解，但遇到包裝較複雜的情境題還是會卡。',
+        steps: ['多練習「生活中的數學」：買東西算錢、量食材重量', '引導孩子在解題後，自己出一道類似的題目給你做'] },
+      high: { status: '表現良好', statusColor: '#2e7d4f', statusBg: '#eaf4ee',
+        desc: '孩子不只是背答案，而是真的理解概念，這會在中高年級帶來很大的優勢。',
+        steps: ['試著讓孩子「教」你一道她剛學會的題目，說給你聽'] }
+    }
+  },
+  {
+    id: 'motivation', title: '內在動機', fullTitle: '內在動機：對數學有沒有自己的感覺',
+    color: '#854F0B', dotColor: '#BA7517',
+    qs: [
+      { text: '這個月有至少一次主動對某道題感到好奇', sub: '哪怕只是「這題好奇怪」也算' },
+      { text: '偶爾會自己想多了解某個數學概念', sub: '而不是只做被要求的部分' },
+      { text: '解出難題時，能感受到成就感', sub: '而不是毫無反應' }
+    ],
+    actions: {
+      low: { status: '需要優先處理', statusColor: '#c0392b', statusBg: '#fdf0ee',
+        desc: '孩子對數學完全沒有自己的感覺，只是在完成任務。沒有內在動機，學習很難持續。',
+        steps: ['暫時放下課本，找一個和孩子興趣有關的數學遊戲或謎題', '讓她體驗「解出來的爽感」，哪怕題目很簡單', '不要在她剛有一點興趣時立刻加碼，先讓這個感覺存在'] },
+      mid: { status: '可以再加強', statusColor: '#8a5a00', statusBg: '#fdf3dc',
+        desc: '有時候會對數學有感覺，但還不穩定，容易被挫折沖掉。',
+        steps: ['記錄孩子「哇，這題好有趣」的時刻，之後可以找類似的題型', '讓孩子自己選一道她喜歡的題型多做幾題'] },
+      high: { status: '表現良好', statusColor: '#2e7d4f', statusBg: '#eaf4ee',
+        desc: '孩子對數學有自己的好奇心，這是最珍貴的學習資源，要好好保護它。',
+        steps: ['順著她的好奇心，讓她自己決定接下來想探索什麼'] }
+    }
+  },
+  {
+    id: 'environment', title: '學習環境', fullTitle: '學習環境：數學帶來的是什麼感受',
+    color: '#72243E', dotColor: '#D4537E',
+    qs: [
+      { text: '和你討論數學題時，孩子不會緊張或防衛', sub: '氣氛是輕鬆的' },
+      { text: '做數學作業時，情緒穩定，不會一開始就崩潰', sub: '' },
+      { text: '孩子知道答錯是正常的，不覺得丟臉', sub: '而不是把答錯和「我很笨」畫等號' }
+    ],
+    actions: {
+      low: { status: '需要優先處理', statusColor: '#c0392b', statusBg: '#fdf0ee',
+        desc: '孩子在數學學習的環境裡感到緊張或不安全。每一次緊張的互動，都在加深她對數學的負面感受。',
+        steps: ['這個月暫時不要在她做作業時坐在旁邊，給她空間先自己試', '陪她做題時，只問「你怎麼想的？」不急著說對或錯', '你自己也說一個「我以前數學也搞錯過」的故事，讓她知道犯錯很正常'] },
+      mid: { status: '可以再加強', statusColor: '#8a5a00', statusBg: '#fdf3dc',
+        desc: '大多時候還好，但某些情境（比如考試後、被催促時）容易讓氣氛變緊繃。',
+        steps: ['觀察是什麼情況讓她特別緊張，針對那個情境調整互動方式', '考試後先問「有沒有一題你覺得自己做得很好？」再看錯題'] },
+      high: { status: '表現良好', statusColor: '#2e7d4f', statusBg: '#eaf4ee',
+        desc: '孩子在學習數學時感到安全，這是建立信心最重要的土壤。',
+        steps: ['繼續保持這樣的互動方式，這比任何教材都重要'] }
+    }
+  },
+  {
+    id: 'confidence', title: '自我評價', fullTitle: '自我評價：孩子怎麼看自己和數學的關係',
+    color: '#3C3489', dotColor: '#7F77DD',
+    qs: [
+      { text: '孩子考完試後，會主動提起成績或分享', sub: '而不是偷偷收起考卷' },
+      { text: '孩子不會用「我數學就是不好」來定義自己', sub: '而是覺得「我可以練習變更好」' },
+      { text: '面對比較難的題目，孩子的第一反應是挑戰，而不是逃開', sub: '' }
+    ],
+    actions: {
+      low: { status: '需要優先處理', statusColor: '#c0392b', statusBg: '#fdf0ee',
+        desc: '孩子已經用「我數學不好」來定義自己，並且選擇逃避而不是面對。這是信心受損最深層的訊號。',
+        steps: ['停止一切跟「成績」有關的對話，改成只聊「你今天學了什麼」', '找一道她一定做得到的題，讓她體驗成功，不要立刻加難', '告訴她：「數學不好」不是天生的，是方法還沒找對'] },
+      mid: { status: '可以再加強', statusColor: '#8a5a00', statusBg: '#fdf3dc',
+        desc: '自信還不穩定，好的時候願意嘗試，遇到挫折就又縮回去。',
+        steps: ['建立一個「我做到了」的小紀錄，讓孩子看見自己的進步軌跡', '多讓她在她熟悉的題型上「教」你，強化她「我懂這個」的感覺'] },
+      high: { status: '表現良好', statusColor: '#2e7d4f', statusBg: '#eaf4ee',
+        desc: '孩子對自己和數學的關係是健康的，相信努力可以進步，這個心態會帶她走很遠。',
+        steps: ['給她更有挑戰性的題目，讓她繼續享受突破的感覺'] }
+    }
+  }
+];
+
+var answers = {}, answered = 0, total = 18;
+
+function buildQuiz() {
+  var html = '';
+  sections.forEach(function(sec) {
+    html += '<div class="section"><div class="section-head">';
+    html += '<div class="section-dot" style="background:' + sec.dotColor + '"></div>';
+    html += '<div class="section-title">' + sec.fullTitle + '</div>';
+    html += '<div class="section-count" id="sc-' + sec.id + '">0 / 3</div></div>';
+    html += '<div class="col-header"><span>有</span><span>沒有</span></div>';
+    sec.qs.forEach(function(q, qi) {
+      var key = sec.id + '_' + qi;
+      html += '<div class="q-row"><div class="q-text">' + q.text;
+      if (q.sub) html += '<div class="q-sub">' + q.sub + '</div>';
+      html += '</div><div class="q-options">';
+      html += '<button class="q-btn" id="btn-' + key + '-yes" onclick="answer(\'' + key + '\',true)"><div class="btn-dot"></div><span>有</span></button>';
+      html += '<button class="q-btn" id="btn-' + key + '-no" onclick="answer(\'' + key + '\',false)"><div class="btn-dot"></div><span>沒有</span></button>';
+      html += '</div></div>';
+    });
+    html += '</div>';
+  });
+  document.getElementById('quiz').innerHTML = html;
+}
+
+function answer(key, val) {
+  var wasAnswered = key in answers;
+  answers[key] = val;
+  if (!wasAnswered) answered++;
+  document.getElementById('btn-' + key + '-yes').className = 'q-btn' + (val ? ' selected-yes' : '');
+  document.getElementById('btn-' + key + '-no').className = 'q-btn' + (!val ? ' selected-no' : '');
+  var fill = Math.round((answered / total) * 100);
+  var bar = document.getElementById('prog-fill');
+  bar.style.width = fill + '%';
+  bar.style.background = fill < 50 ? '#aaa' : fill < 100 ? '#BA7517' : '#185FA5';
+  document.getElementById('prog-count').textContent = answered + ' / ' + total;
+  document.getElementById('prog-text').textContent = answered === total ? '完成！查看結果' : '作答中…（' + fill + '%）';
+  sections.forEach(function(sec) {
+    var cnt = sec.qs.filter(function(q, qi) { return (sec.id + '_' + qi) in answers; }).length;
+    document.getElementById('sc-' + sec.id).textContent = cnt + ' / 3';
+  });
+  if (answered === total) showResult();
+}
+
+function showResult() {
+  var dimScores = {};
+  sections.forEach(function(sec) {
+    dimScores[sec.id] = sec.qs.filter(function(q, qi) { return answers[sec.id + '_' + qi] === true; }).length;
+  });
+  var totalYes = Object.values(dimScores).reduce(function(a, b) { return a + b; }, 0);
+
+  var levelColor, title, desc;
+  if (totalYes <= 5) {
+    levelColor = '#c0392b'; title = '需要立即關注';
+    desc = '孩子在多個面向都出現了困難訊號。最重要的不是加練習量，而是先找出哪個層面最薄弱，從那裡開始，一次只處理一件事。';
+  } else if (totalYes <= 9) {
+    levelColor = '#BA7517'; title = '有幾個地方值得留意';
+    desc = '整體還在可調整的範圍，但已有早期訊號出現。找出下方得分最低的面向，這個月集中處理那一個。';
+  } else if (totalYes <= 14) {
+    levelColor = '#BA7517'; title = '大致健康，持續觀察';
+    desc = '孩子狀態算穩定，但還有進步空間。現在介入成本最低，效果也最好。';
+  } else {
+    levelColor = '#2e7d4f'; title = '目前狀態很好！';
+    desc = '孩子在數學自信和學習方式上都有健康的表現，繼續維持，每月再檢視一次。';
+  }
+
+  var html = '<div class="result-wrap">';
+  html += '<div class="result-summary"><div class="result-top" style="border-left-color:' + levelColor + '">';
+  html += '<div class="result-total" style="color:' + levelColor + '">' + title + '（' + totalYes + ' / 18）</div>';
+  html += '<div class="result-desc">' + desc + '</div></div></div>';
+  html += '<div class="dim-section-title">六個面向的詳細結果與建議行動</div>';
+  html += '<div class="dim-cards">';
+
+  sections.forEach(function(sec) {
+    var score = dimScores[sec.id];
+    var barPct = Math.round((score / 3) * 100);
+    var ak = score <= 1 ? 'low' : score === 2 ? 'mid' : 'high';
+    var a = sec.actions[ak];
+    var stepsHtml = a.steps.map(function(s, i) {
+      return '<div class="action-item"><div class="action-num" style="background:' + a.statusBg + ';color:' + a.statusColor + '">' + (i+1) + '</div><div>' + s + '</div></div>';
+    }).join('');
+
+    html += '<div class="dim-card">';
+    html += '<div class="dim-card-head"><div class="dim-card-dot" style="background:' + sec.dotColor + '"></div>';
+    html += '<div class="dim-card-title">' + sec.title + '</div>';
+    html += '<div class="dim-card-score">' + score + ' / 3</div></div>';
+    html += '<div class="dim-bar-track"><div class="dim-bar-fill" style="width:' + barPct + '%;background:' + sec.color + '"></div></div>';
+    html += '<div class="dim-card-body">';
+    html += '<div class="dim-status" style="background:' + a.statusBg + ';color:' + a.statusColor + '">' + a.status + '</div>';
+    html += '<div class="dim-desc">' + a.desc + '</div>';
+    html += '<div class="action-label">這個月可以做的事</div>';
+    html += stepsHtml + '</div></div>';
+  });
+
+  html += '</div></div>';
+  document.getElementById('result-area').innerHTML = html;
+  document.getElementById('reset-btn').style.display = 'block';
+  setTimeout(function() {
+    document.getElementById('result-area').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 100);
+}
+
+function reset() {
+  answers = {}; answered = 0;
+  var bar = document.getElementById('prog-fill');
+  bar.style.width = '0%'; bar.style.background = '#ccc';
+  document.getElementById('prog-count').textContent = '0 / 18';
+  document.getElementById('prog-text').textContent = '請開始作答';
+  document.getElementById('result-area').innerHTML = '';
+  document.getElementById('reset-btn').style.display = 'none';
+  buildQuiz();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+buildQuiz();
+</script>
+</body>
+</html>
