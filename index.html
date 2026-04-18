@@ -141,7 +141,7 @@ body { font-family: "Noto Sans TC", sans-serif; background: var(--brand-yellow);
 <div class="hero">
   <img id="hero-logo" alt="魔數" class="hero-logo">
   <div class="hero-badge">創辦人的話</div>
-  <h1>孩子還沒說討厭數學<br>不代表一切都好</h1>
+  <h1>孩子還沒說討厭數學，<br>不代表一切都好</h1>
   <p>有些事孩子不會說出口，但這份測驗幫你看見</p>
   <div class="hero-meta">
     <span>18 道題目</span>
@@ -175,7 +175,7 @@ body { font-family: "Noto Sans TC", sans-serif; background: var(--brand-yellow);
   <div class="footer">
     <img id="footer-logo" alt="魔數" class="footer-logo">
     <div class="footer-desc">我們相信，每個孩子都有愛上數學的可能。<br>魔數陪你一起找到那個方式。</div>
-    <a class="footer-link" href="https://line.me/ti/g2/1ugO-Wl8ozZYnYzF-61agHxMratG1AnWz6o0oQ?utm_source=invitation&utm_medium=link_copy&utm_campaign=default" target="_blank">加入魔法談心數，一起陪伴孩子成長 →</a>
+    <a class="footer-link" href="https://www.theworldmaths.com" target="_blank" style="background:var(--accent-orange)">了解更多 →</a>
   </div>
 </div>
 
@@ -432,17 +432,17 @@ function buildResultData() {
   var totalYes = Object.values(dimScores).reduce(function(a, b) { return a + b; }, 0);
   var levelColor, title, desc;
   if (totalYes <= 5) {
-    levelColor = "#c0392b"; title = "需要立即關注";
-    desc = "孩子在多個面向都出現了困難訊號。最重要的不是加練習量，而是先找出哪個層面最薄弱，從那裡開始，一次只處理一件事。";
+    levelColor = "#c0392b"; title = "先停下來，孩子需要你看見他";
+    desc = "看到這個結果，先深呼吸一下。很多時候我們都是等到孩子說「我不想學了」才發現，但你現在已經在做最重要的事「提早看見」。我們從得分最低的面向開始改善，每次只做一件事，可加入魔法談心數，免費諮詢專業老師。";
   } else if (totalYes <= 9) {
-    levelColor = "#eb8424"; title = "有幾個地方值得留意";
-    desc = "整體還在可調整的範圍，但已有早期訊號出現。找出下方得分最低的面向，這個月集中處理那一個。";
+    levelColor = "#eb8424"; title = "現在看見，剛剛好";
+    desc = "很多爸媽跟我說，「不知道孩子目前數學學習的如何？」這份結果幫你看見，找出下方得分最低的面向，這個月先從那裡陪孩子一起調整，也可加入魔法談心數，免費諮詢專業老師。";
   } else if (totalYes <= 14) {
-    levelColor = "#eb8424"; title = "大致健康，持續觀察";
-    desc = "孩子狀態算穩定，但還有進步空間。現在介入成本最低，效果也最好。";
+    levelColor = "#eb8424"; title = "做得很好，繼續保持！";
+    desc = "孩子對數學還有信心，學習的狀態是穩的。還有幾個面向可以更紮實，趁現在基礎好的時候加強，往後遇到難關會更有能力挑戰。";
   } else {
-    levelColor = "#00677f"; title = "目前狀態很好！";
-    desc = "孩子在數學自信和學習方式上都有健康的表現，繼續維持，每月再檢視一次。";
+    levelColor = "#00677f"; title = "孩子的數學學習狀態，整體都很好唷！";
+    desc = "這份結果不是孩子的成績單，是你陪伴孩子學習的成果。孩子對數學保有信心和好奇心，這不是偶然的，我們定期再回來檢視一次，好的狀態需要被守護。";
   }
   var dimText = sections.map(function(sec) {
     var score = dimScores[sec.id];
