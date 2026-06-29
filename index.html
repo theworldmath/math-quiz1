@@ -13,7 +13,7 @@
 :root {
   --brand-dark: #00677f;
   --brand-mid: #77c5d5;
-  --brand-yellow: #FFF2BD;
+  --brand-yellow: #FDEBD0;
   --accent-orange: #eb8424;
   --accent-teal: #34a798;
   --text-primary: #1a1a1a;
@@ -80,9 +80,9 @@ body { font-family: "Noto Sans TC", sans-serif; background: var(--brand-yellow);
 
 /* Submit button */
 .submit-wrap { text-align: center; margin-top: 24px; }
-.submit-btn { background: var(--accent-orange); color: #fff; font-size: 16px; font-weight: 500; font-family: "Noto Sans TC", sans-serif; padding: 14px 40px; border: none; border-radius: 999px; cursor: pointer; transition: background .15s, opacity .15s; opacity: .4; pointer-events: none; }
+.submit-btn { background: #00677f; color: #fff; font-size: 16px; font-weight: 500; font-family: "Noto Sans TC", sans-serif; padding: 14px 40px; border: none; border-radius: 999px; cursor: pointer; transition: background .15s, opacity .15s; opacity: .4; pointer-events: none; }
 .submit-btn.active { opacity: 1; pointer-events: all; }
-.submit-btn.active:hover { background: #c96e18; }
+.submit-btn.active:hover { background: #004f61; }
 
 /* Modal overlay */
 .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 100; align-items: center; justify-content: center; padding: 20px; }
@@ -141,7 +141,7 @@ body { font-family: "Noto Sans TC", sans-serif; background: var(--brand-yellow);
 <div class="hero">
   <img id="hero-logo" alt="魔數" class="hero-logo">
   <div class="hero-badge">創辦人的話</div>
-  <h1>孩子還沒說討厭數學<br>不代表一切都好</h1>
+  <h1>孩子還沒說討厭數學，<br>不代表一切都好</h1>
   <p>有些事孩子不會說出口，但這份測驗幫你看見</p>
   <div class="hero-meta">
     <span>18 道題目</span>
@@ -183,9 +183,9 @@ body { font-family: "Noto Sans TC", sans-serif; background: var(--brand-yellow);
 <div class="modal-overlay" id="modal-overlay">
   <div class="modal">
     <div class="modal-title">將檢測報告寄到你的信箱</div>
-    <div class="modal-desc">填入信箱，我們把這份結果和每個面向的建議行動寄給你，方便隨時查看。</div>
-    <input class="modal-input" type="email" id="modal-email" placeholder="請輸入你的 Email" />
-    <button class="modal-send-btn" id="modal-send-btn" onclick="sendReport()">寄送報告並查看結果</button>
+    <div class="modal-desc">填入信箱，我們會把這份結果和每個面向的建議行動寄給你，方便隨時查看（選填）。</div>
+    <input class="modal-input" type="email" id="modal-email" placeholder="請輸入你的 Email（選填）" />
+    <button class="modal-send-btn" id="modal-send-btn" onclick="submitAndView()">查看結果</button>
     
     <div class="modal-status" id="modal-status"></div>
   </div>
@@ -385,38 +385,28 @@ function sendReport() {
   var email = document.getElementById("modal-email").value.trim();
   var statusEl = document.getElementById("modal-status");
   var btn = document.getElementById("modal-send-btn");
-  if (!email || email.indexOf("@") < 0) {
-    statusEl.className = "modal-status error";
-    statusEl.textContent = "請輸入正確的 Email 格式";
-    return;
-  }
-  btn.disabled = true;
-  btn.textContent = "寄送中…";
-  statusEl.className = "modal-status";
-  statusEl.textContent = "";
-
   var resultData = buildResultData();
 
-  emailjs.send("service_letgzku", "template_1sb8rg6", {
-    to_email: email,
-    result_title: resultData.title,
-    result_desc: resultData.desc,
-    dim_results: resultData.dimText
-  }).then(function() {
-    statusEl.className = "modal-status success";
-    statusEl.textContent = "報告已寄出！請檢查你的信箱 ✓";
-    btn.textContent = "已寄出";
-    setTimeout(function() {
+  if (email && email.indexOf("@") >= 0) {
+    btn.disabled = true;
+    btn.textContent = "處理中…";
+    emailjs.send("service_letgzku", "template_1sb8rg6", {
+      to_email: email,
+      result_title: resultData.title,
+      result_desc: resultData.desc,
+      dim_results: resultData.dimText
+    }).then(function() {
       closeModal();
       showResult(resultData);
-    }, 1500);
-  }, function(error) {
-    statusEl.className = "modal-status error";
-    statusEl.textContent = "寄送失敗，請稍後再試。";
-    btn.disabled = false;
-    btn.textContent = "寄送報告並查看結果";
-    console.error(error);
-  });
+    }, function(error) {
+      console.error(error);
+      closeModal();
+      showResult(resultData);
+    });
+  } else {
+    closeModal();
+    showResult(resultData);
+  }
 }
 
 function skipEmail() {
@@ -444,14 +434,37 @@ function buildResultData() {
     levelColor = "#00677f"; title = "孩子的數學學習狀態，整體都很好唷！";
     desc = "這份結果不是孩子的成績單，是你陪伴孩子學習的成果。孩子對數學保有信心和好奇心，這不是偶然的，我們定期再回來檢視一次，好的狀態需要被守護。";
   }
-  var dimText = sections.map(function(sec) {
+  var dimHtml = sections.map(function(sec) {
     var score = dimScores[sec.id];
     var ak = score <= 1 ? "low" : score === 2 ? "mid" : "high";
     var a = sec.actions[ak];
-    var steps = a.steps.map(function(s, i) { return (i+1) + ". " + s; }).join("\n");
-    return sec.fullTitle + "（" + score + "/3）\n狀態：" + a.status + "\n" + a.desc + "\n建議行動：\n" + steps;
-  }).join("\n\n");
-  return { totalYes: totalYes, levelColor: levelColor, title: title, desc: desc, dimScores: dimScores, dimText: dimText };
+    var statusBg = a.statusBg;
+    var statusColor = a.statusColor;
+    var stepsHtml = a.steps.map(function(s, i) {
+      return "<tr><td style='padding:4px 0 4px 8px;vertical-align:top;width:24px;'><span style='display:inline-block;width:20px;height:20px;border-radius:50%;background:" + statusBg + ";color:" + statusColor + ";font-size:11px;font-weight:700;text-align:center;line-height:20px;'>"+  (i+1) + "</span></td><td style='padding:4px 0 4px 8px;font-size:13px;color:#4a4a4a;line-height:1.6;'>" + s + "</td></tr>";
+    }).join("");
+    var barWidth = Math.round((score/3)*100);
+    var barColor = sec.color;
+    return "<table width='100%' cellpadding='0' cellspacing='0' border='0' style='margin-bottom:12px;border-radius:12px;border:1px solid #e0ddd6;overflow:hidden;'>"+
+      "<tr><td style='background:#f9f7f0;padding:12px 14px;'>"+
+        "<table width='100%' cellpadding='0' cellspacing='0' border='0'><tr>"+
+          "<td><span style='display:inline-block;width:9px;height:9px;border-radius:50%;background:" + sec.dotColor + ";margin-right:8px;vertical-align:middle;'></span>"+
+          "<span style='font-size:13px;font-weight:600;color:#00677f;'>"+sec.title+"</span></td>"+
+          "<td style='text-align:right;font-size:12px;color:#888;'>"+score+" / 3</td>"+
+        "</tr></table>"+
+      "</td></tr>"+
+      "<tr><td style='height:4px;background:#eee;padding:0;'>"+
+        "<div style='height:4px;width:" + barWidth + "%;background:" + barColor + ";'></div>"+
+      "</td></tr>"+
+      "<tr><td style='padding:14px;'>"+
+        "<span style='display:inline-block;font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;background:" + statusBg + ";color:" + statusColor + ";margin-bottom:8px;'>"+a.status+"</span>"+
+        "<p style='margin:0 0 10px;font-size:13px;color:#4a4a4a;line-height:1.7;'>"+a.desc+"</p>"+
+        "<p style='margin:0 0 6px;font-size:11px;font-weight:700;letter-spacing:.07em;color:#888;text-transform:uppercase;'>"+"這個月可以做的事"+"</p>"+
+        "<table width='100%' cellpadding='0' cellspacing='0' border='0'>"+stepsHtml+"</table>"+
+      "</td></tr>"+
+    "</table>";
+  }).join("");
+  return { totalYes: totalYes, levelColor: levelColor, title: title, desc: desc, dimScores: dimScores, dimText: dimHtml };
 }
 
 function showResult(data) {
